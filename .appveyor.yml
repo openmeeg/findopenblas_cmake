@@ -63,6 +63,7 @@ build_script:
 
 test_script:
   - ps: |
+      cp 'C:\mingw64_dll\*' $env:APPVEYOR_BUILD_FOLDER\build\Debug\
       cp 'C:\OpenBLAS\*.dll' $env:APPVEYOR_BUILD_FOLDER\build\Debug\
   - cd %APPVEYOR_BUILD_FOLDER%\build\
   - .\Debug\CMakeHelloWorld.exe
