@@ -5,9 +5,11 @@ language:
 
 addons:
   apt:
+    sources:
+      - ubuntu-toolchain-r-test
     packages:
-    - cmake
-    - libopenblas-dev
+      - libopenblas-dev
+      - liblapacke-dev
 
 matrix:
   include:
@@ -15,13 +17,6 @@ matrix:
     # Linux Machines
     #########
     - os: linux
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - libopenblas-base
-            - libopenblas-dev
 
     #########
     # OSx Machines
