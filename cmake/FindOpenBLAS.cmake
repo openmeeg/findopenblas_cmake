@@ -79,6 +79,7 @@ find_path(OpenBLAS_LAPACKE_INCLUDE_DIR
 set(PATH_SUFFIXES_LIST
   lib64
   lib
+  bin
 )
 find_library(OpenBLAS_LIB 
                  NAMES openblas
