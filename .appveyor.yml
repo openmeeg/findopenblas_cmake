@@ -46,25 +46,26 @@ install:
         Start-FileDownload 'https://sourceforge.net/projects/openblas/files/v0.2.14/mingw64_dll.zip' -FileName 'C:\mingw64_dll.zip'
         ECHO 'Done'
       }
-      7z x -y OpenBLAS.zip -oC:\
-      7z x -y mingw64_dll.zip -oC:\
+      7z x C:\OpenBLAS.zip -oC:\
+      7z x C:\mingw64_dll.zip -oC:\
 
 before_build:
   - cd %APPVEYOR_BUILD_FOLDER%
-  - "ECHO 'cmake -DBLA_STATIC=%BUILD_STATIC% -DBLA_VENDOR=%BLAS_VERSION% -G \"Visual Studio 14 2015 Win64\" .. '"
-  - cmake --version -DOpenBLAS_DIR=C:\OpenBLAS
+  - cmake --version
   - ps: |
       mkdir build
       cd build
-  - cmake  -G "Visual Studio 14 2015 Win64" ..
+  - ps: $env:OpenBLAS_DIR="C:\OpenBLAS-v0.2.19-Win64-int32\"
+  - cmake -G "Visual Studio 14 2015 Win64" ..
 
 build_script:
   - cmake --build .
 
 test_script:
   - ps: |
-      cp 'C:\mingw64_dll\*' $env:APPVEYOR_BUILD_FOLDER\build\Debug\
-      cp 'C:\OpenBLAS\*.dll' $env:APPVEYOR_BUILD_FOLDER\build\Debug\
+      cp C:\mingw64_dll\* $env:APPVEYOR_BUILD_FOLDER\build\Debug\
+      cp C:\OpenBLAS-v0.2.19-Win64-int32\lib\* $env:APPVEYOR_BUILD_FOLDER\build\Debug\
+
   - cd %APPVEYOR_BUILD_FOLDER%\build\
   - .\Debug\CMakeHelloWorld.exe
 
