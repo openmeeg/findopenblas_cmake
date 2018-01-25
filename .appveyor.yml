@@ -21,9 +21,9 @@ skip_commits:
 # Add [av skip] to commit messages
   message: /\[av skip\]/
 
-# To allow remote connection to appveyor
-init:
-  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+# # To allow remote connection to appveyor
+# init:
+#   - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 install:
   ############################################################################
@@ -37,7 +37,7 @@ install:
       $env:PATH="C:\cmake-3.10.1-win64-x64\bin;$env:PATH"
 
   ############################################################################
-  # Install MKL
+  # Install OpenBLAS
   ############################################################################
   - ps: |
       if (![IO.File]::Exists("C:\OpenBLAS.zip")) {
@@ -48,6 +48,11 @@ install:
       }
       7z x C:\OpenBLAS.zip -oC:\
       7z x C:\mingw64_dll.zip -oC:\
+  - ps: $env:OpenBLAS_DIR="C:\OpenBLAS-v0.2.19-Win64-int32\"
+  - ps: $env:OpenBLAS_Config_path="$env:OpenBLAS_DIR\lib\cmake\openblas\OpenBLASConfig.cmake"
+  - ps: (Get-Content $env:OpenBLAS_Config_path).replace('/home/traits/project/pack_openblas', 'C:') | Set-Content $env:OpenBLAS_Config_path
+  - ps: (Get-Content $env:OpenBLAS_Config_path).replace('bin/libopenblas.dll', 'lib/libopenblas.dll.a') | Set-Content $env:OpenBLAS_Config_path
+
 
 before_build:
   - cd %APPVEYOR_BUILD_FOLDER%
@@ -55,7 +60,6 @@ before_build:
   - ps: |
       mkdir build
       cd build
-  - ps:   $env:OpenBLAS_DIR="C:\OpenBLAS-v0.2.19-Win64-int32\"
   - cmake -G "Visual Studio 14 2015 Win64" ..
 
 build_script:
@@ -65,11 +69,12 @@ test_script:
   - ps: |
       cp C:\mingw64_dll\* $env:APPVEYOR_BUILD_FOLDER\build\Debug\
       cp C:\OpenBLAS-v0.2.19-Win64-int32\lib\* $env:APPVEYOR_BUILD_FOLDER\build\Debug\
+      cp C:\OpenBLAS-v0.2.19-Win64-int32\bin\* $env:APPVEYOR_BUILD_FOLDER\build\Debug\
 
   - cd %APPVEYOR_BUILD_FOLDER%\build\
   - .\Debug\CMakeHelloWorld.exe
 
 deploy: off
 
-on_finish:
-  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+# on_finish:
+#   - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
