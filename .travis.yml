@@ -45,6 +45,7 @@ before_install:
       export PATH=${DEPS_DIR}/cmake/bin:${PATH}
     else
       brew upgrade cmake
+      rm -rf /usr/local/include/c++
       brew install openblas
     fi
   - which cmake
