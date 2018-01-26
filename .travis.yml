@@ -5,9 +5,11 @@ language:
 
 addons:
   apt:
+    sources:
+      - ubuntu-toolchain-r-test
     packages:
-    - cmake
-    - libopenblas-dev
+      - libopenblas-dev
+      - liblapacke-dev
 
 matrix:
   include:
@@ -15,19 +17,6 @@ matrix:
     # Linux Machines
     #########
     - os: linux
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - libopenblas-base
-            - libopenblas-dev
-
-    #########
-    # OSx Machines
-    #########
-    - os: osx
-
 
 before_install:
   # Dependencies required by the CI are installed in ${TRAVIS_BUILD_DIR}/deps/
@@ -48,9 +37,6 @@ before_install:
       CMAKE_URL="https://cmake.org/files/v${CMAKE_VERSION%.[0-9]}/cmake-${CMAKE_VERSION}-Linux-x86_64.tar.gz"
       mkdir cmake && travis_retry wget --no-check-certificate -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake
       export PATH=${DEPS_DIR}/cmake/bin:${PATH}
-    else
-      brew upgrade cmake
-      brew install openblas
     fi
   - which cmake
   - cmake --version
@@ -58,22 +44,12 @@ before_install:
 script:
   - cd ${TRAVIS_BUILD_DIR}
   - mkdir -p build && cd build
-  - export CMAKE_OPTIONS="-DCMAKE_CXX_STANDARD=11 -DBLA_VENDOR=OpenBLAS"
-  # - |
-  #   if [[ "${BUILD_STATIC}" == "ON" ]]; then
-  #     export CMAKE_OPTIONS="${CMAKE_OPTIONS} -DBLA_STATIC=ON"
-  #   fi
+  - export CMAKE_OPTIONS="-DCMAKE_CXX_STANDARD=11"
   - if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then echo $LD_LIBRARY_PATH; fi
-  - if [[ "${TRAVIS_OS_NAME}" == "osx" ]]; then echo $DYLD_LIBRARY_PATH; fi
   - echo "cmake .. ${CMAKE_OPTIONS}"
   - cmake .. ${CMAKE_OPTIONS}
   - make VERBOSE=1
-  - |
-    if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
-      ldd ./CMakeHelloWorld
-    else  # Mac
-      otool -L ./CMakeHelloWorld
-    fi
+  - ldd ./CMakeHelloWorld
 
 after_success:
   - ./CMakeHelloWorld
