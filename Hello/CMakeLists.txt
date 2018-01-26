@@ -4,5 +4,8 @@ add_library(Hello
 
 target_compile_definitions(Hello PUBLIC ${BLA_DEFINITIONS})
 
-install (TARGETS Hello DESTINATION bin)
-install (FILES Speaker.h DESTINATION include)
+target_include_directories(Hello PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<INSTALL_INTERFACE:include>  # <prefix>/include
+    PRIVATE ${BLA_INCLUDE_DIR})
+
