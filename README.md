@@ -1,5 +1,5 @@
 [![Build status](https://travis-ci.org/openmeeg/findopenblas_cmake.svg?branch=master)](https://travis-ci.org/openmeeg/findopenblas_cmake/branches)
-[![Build status](https://ci.appveyor.com/api/projects/status/isesderk2yil38ms?svg=true)](https://ci.appveyor.com/project/openmeegci/findopenblas-cmake)
+[![Build status](https://ci.appveyor.com/api/projects/status/c4rrov92d1uemp56/branch/master?svg=true)](https://ci.appveyor.com/project/openmeegci/findopenblas-cmake/branch/master)
 
 This repo provides FindOpenBLAS.cmake file, which can be used to configure a CMake project that needs OpenBLAS.
 We basically took [this](https://github.com/jameskbride/cmake-hello-world) extremely simple C++ example,
