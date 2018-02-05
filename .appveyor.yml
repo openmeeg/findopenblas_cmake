@@ -41,7 +41,7 @@ install:
   ############################################################################
   - ps: |
       if (![IO.File]::Exists("C:\OpenBLAS.zip")) {
-        ECHO 'OpenBLAS-v0.2.19-Win64-int32.zip does not exist. Preparing to download MKL ..'
+        ECHO 'OpenBLAS-v0.2.19-Win64-int32.zip does not exist. Preparing to download OpenBLAS ..'
         Start-FileDownload 'https://downloads.sourceforge.net/project/openblas/v0.2.19/OpenBLAS-v0.2.19-Win64-int32.zip' -FileName 'C:\OpenBLAS.zip'
         Start-FileDownload 'https://sourceforge.net/projects/openblas/files/v0.2.14/mingw64_dll.zip' -FileName 'C:\mingw64_dll.zip'
         ECHO 'Done'
